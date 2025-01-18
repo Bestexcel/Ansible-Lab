@@ -1,0 +1,44 @@
+# Local .terraform directories
+**/.terraform/*
+
+#.tfsate files
+*.tfstate
+*.tfstate.*
+
+#crash log files
+crash.log
+crash.*.log
+
+#Exclude all .tfvars files from version control,
+#as they typically contain sensitive information
+#such as passwords, private keys, and other
+#environment-specific data that should be kept
+#confidential and are subject to change.
+*.tfvars.json
+*.tfvars
+
+
+#Ignore override files as they are usually used
+#to override resources locally and should not be
+#checked into version control.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.lock.hcl
+
+#Ignore transient lock info files created by
+#Terraform, as they are temporary and not intended
+#for version control.
+.terraform.tfsate.lock.info
+
+#Include override files you wish to add to version
+#control using negative patterns.
+#Example: *.tfplan
+
+#Ignore all CLI configuration files.
+.terraformrc
+terraform.rc
+pmo-key
+
+
