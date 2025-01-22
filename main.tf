@@ -4,8 +4,6 @@ locals {
   name = "pmo"
 }
 
-
-
 # Create a custom VPC called pmo-vpc
 
 resource "aws_vpc" "pmo-vpc" {
@@ -24,16 +22,18 @@ resource "aws_subnet" "pmo-sub-pub" {
   vpc_id            = (aws_vpc.pmo-vpc.id)
   cidr_block        = var.pubsubcidr
   availability_zone = var.az1
+ 
   tags = {
     Name = "${local.name}-pmo-sub-pub"
   }
 }
 
-#pmo-sub-priv1
+# Private subnet pmo-sub-priv1
 resource "aws_subnet" "pmo-sub-priv" {
   vpc_id            = (aws_vpc.pmo-vpc.id)
   cidr_block        = var.prisubcidr
   availability_zone = var.az2
+ 
   tags = {
     Name = "${local.name}-pmo-sub-priv"
   }
@@ -75,11 +75,6 @@ resource "aws_route_table_association" "pmo-rt-assoc2" {
   route_table_id = aws_route_table.pmo-rt.id
 }
 
-
-
-
-
-
 #Creating Ansible security group
 resource "aws_security_group" "ansible-sg" {
   name        = "ansible-sg allow_tls"
@@ -105,7 +100,6 @@ resource "aws_security_group" "ansible-sg" {
     Name = "ansible-sg"
   }
 }
-
 
 #Creating manage node security group
 resource "aws_security_group" "m-node-sg" {
@@ -137,10 +131,9 @@ resource "aws_security_group" "m-node-sg" {
   }
 
   tags = {
-    Name = "ansible-sg"
+    Name = "m-node-sg"
   }
 }
-
 
 
 #Creating keypair
@@ -171,7 +164,8 @@ resource "local_file" "key" {
 
 //creating and registering the public key in AWS
 /*
-this pass the content of the file to aws. Note: the public key is passed to aws console to enable ssh.
+this pass the content of the file to aws. Note:
+the public key is passed to aws console to enable ssh.
 */
 
 resource "aws_key_pair" "key" {
@@ -179,8 +173,7 @@ resource "aws_key_pair" "key" {
     public_key = tls_private_key.key.public_key_openssh
 }
 
-
-#creating instance
+#creating instances
 //creating ansible server
 resource "aws_instance" "ansible" {
   ami = var.ubuntu //ansible ubuntu ami
@@ -190,6 +183,7 @@ resource "aws_instance" "ansible" {
   subnet_id = aws_subnet.pmo-sub-pub.id
   associate_public_ip_address = true
   user_data = file("./userdata.sh")
+  
   tags = {
     Name = "${local.name}-ansible"
   }
@@ -200,11 +194,12 @@ resource "aws_instance" "redhat" {
   ami = var.redhat //redhat ami
   instance_type = "t2.micro"
   key_name = aws_key_pair.key.id
-  vpc_security_group_ids = [ aws_security_group.m-node-sg.id ]
+  vpc_security_group_ids = [aws_security_group.m-node-sg.id]
   subnet_id = aws_subnet.pmo-sub-pub.id
   associate_public_ip_address = true
+    
     tags = {
-    Name = "redhat"
+    Name = "${local.name}-redhat"
   }
 }
 
@@ -216,8 +211,9 @@ resource "aws_instance" "ubuntu" {
   vpc_security_group_ids = [ aws_security_group.m-node-sg.id ]
   subnet_id = aws_subnet.pmo-sub-pub.id
   associate_public_ip_address = true
+  
   tags = {
-    Name = "ubuntu"
+    Name = "${local.name}-ubuntu"
   }
 }
 
