@@ -83,6 +83,7 @@ terraform.rc
 *.key
 *.secret
 pmo-key
+ubuntu@52.211.250.129
 
 # Ignore editor-specific files (e.g., VSCode, IntelliJ, etc.)
 .vscode/
