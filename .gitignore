@@ -40,6 +40,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 pmo-key
+ubuntu@52.211.250.129
+
 
 
 
